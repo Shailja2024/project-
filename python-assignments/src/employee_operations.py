@@ -1,32 +1,28 @@
-"""
-Employee Operations Module
-
-This module provides functions for adding, deleting, and updating employee information.
-"""
-
-def add_employee():
+ef add_employee():
     """
     Add Employee Function
 
     This function prompts the user to input details for a new employee and adds the employee
     to the system.
-
     """
 
-def delete_employee():
-    """
-    Delete Employee Function
+    employees = [] # List to store employee information
 
-    This function prompts the user to input the ID of the employee to be deleted and
-    removes the employee from the system.
+    # Prompt the user for employee details
+    employee_id = input("Enter employee ID: ")
+    employee_name = input("Enter employee name: ")
+    employee_department = input("Enter employee department: ")
+    employee_salary = float(input("Enter employee salary: "))
 
-    """
+    # Create a dictionary to store employee information
+    new_employee = {
+        "id": employee_id,
+        "name": employee_name,
+        "department": employee_department,
+        "salary": employee_salary
+    }
 
-def update_employee():
-    """
-    Update Employee Function
+    # Add the new employee to the list
+    employees.append(new_employee)
 
-    This function prompts the user to input the ID of the employee to be updated and
-    allows the user to modify the employee's information such as name, department, or salary.
-
-    """
+    print(f"Employee {employee_name} added to the system.")
