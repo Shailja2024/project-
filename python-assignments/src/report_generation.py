@@ -1,49 +1,68 @@
-"""
-Report Generation Module
+The provided code has some minor errors and can be improved for readability and efficiency. Here's the revised version:
 
-This module provides a function for generating reports based on employee data.
-"""
-
+Python
 def generate_reports(employee_data):
-    """
-    Generate Reports Function
+  """
+  Generate Reports Function
 
-    This function generates various reports based on employee data, such as:
-    - List of departments
-    - List of all employees with ID, full name, and department
-    - List of all departments with the average age and salary of employees
-    - List of employees in each department with ID, full name, date of birth, salary,
-      and total salary for department's employees
+  This function generates various reports based on employee data:
 
-    Args:
-        employee_data (list): A list of dictionaries containing employee data.
-    """
-    # List of departments
-    departments = list(set(emp['department'] for emp in employee_data))
+  - List of Departments: Unique department names.
+  - List of All Employees: ID, full name, and department for each employee.
+  - Departmental Averages: Average age and salary per department.
+  - Employee Details by Department: ID, full name, date of birth, salary, and
+    total department salary for each employee, grouped by department.
 
-    # List of all employees with ID, full name, and department
-    employees = [[emp['employee_id'], emp['full_name'], emp['department']] for emp in employee_data]
+  Args:
+      employee_data (list): A list of dictionaries containing employee data.
 
-    # List of all departments with the average age and salary of employees
-    dept_averages = []
-    for dept in departments:
-        dept_employees = [emp for emp in employee_data if emp['department'] == dept]
-        total_age = sum(emp['age'] for emp in dept_employees)
-        avg_age = total_age / len(dept_employees)
-        total_salary = sum(emp['salary'] for emp in dept_employees)
-        avg_salary = total_salary / len(dept_employees)
-        dept_averages.append({'department': dept, 'avg_age': avg_age, 'avg_salary': avg_salary})
+  Returns:
+      dict: A dictionary containing the generated reports.
+  """
 
-    # List of employees in each department with ID, full name, date of birth, salary,
-    # and total salary for department's employees
-    dept_emp_lists = {dept: [] for dept in departments}
-    dept_total_salaries = {dept: 0 for dept in departments}
+  reports = {}
 
-    for emp in employee_data:
-        dept_emp_lists[emp['department']].append([emp['employee_id'], emp['full_name'], emp['date_of_birth'], emp['salary']])
-        dept_total_salaries[emp['department']] += emp['salary']
+  # List of Departments (unique)
+  departments = list(set(emp['department'] for emp in employee_data))
+  reports['List of Departments'] = departments
 
-    for dept in dept_emp_lists:
-        dept_emp_lists[dept].append(dept_total_salaries[dept])
+  # List of All Employees
+  all_employees = [
+      {'id': emp['employee_id'], 'full_name': emp['full_name'], 'department': emp['department']}
+      for emp in employee_data
+  ]
+  reports['List of All Employees'] = all_employees
 
-    return departments, employees, dept_averages, dept_emp_lists
+  # Departmental Averages
+  departmental_averages = []
+  for dept in departments:
+    dept_employees = [emp for emp in employee_data if emp['department'] == dept]
+    if dept_employees:  # Check if there are employees in the department
+      total_age = sum(emp.get('age', 0) for emp in dept_employees)  # Handle missing age
+      avg_age = total_age / len(dept_employees)
+      total_salary = sum(emp.get('salary', 0.0) for emp in dept_employees)  # Handle missing salary
+      avg_salary = total_salary / len(dept_employees)
+      departmental_averages.append({'department': dept, 'avg_age': avg_age, 'avg_salary': avg_salary})
+  reports['Departmental Averages'] = departmental_averages
+
+  # Employee Details by Department
+  employee_details_by_dept = {}
+  dept_total_salaries = {dept: 0 for dept in departments}
+  for emp in employee_data:
+    dept = emp['department']
+    if dept not in employee_details_by_dept:
+      employee_details_by_dept[dept] = []
+    employee_details_by_dept[dept].append({
+        'id': emp['employee_id'],
+        'full_name': emp['full_name'],
+        'date_of_birth': emp.get('date_of_birth'),
+        'salary': emp.get('salary'),
+    })
+    dept_total_salaries[dept] += emp.get('salary', 0.0)  # Handle missing salary
+
+  for dept, emp_list in employee_details_by_dept.items():
+    emp_list.append({'Total Salary': dept_total_salaries[dept]})
+
+  reports['Employee Details by Department'] = employee_details_by_dept
+
+  return reports
