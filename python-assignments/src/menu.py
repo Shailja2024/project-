@@ -24,17 +24,21 @@ def main_menu():
         print("4. Generate Reports")
         print("5. Exit")
 
-        choice = input("Enter your choice: ")
+        try:
+            choice = int(input("Enter your choice: "))
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+            continue
 
-        if choice == "1":
+        if choice == 1:
             add_employee()
-        elif choice == "2":
+        elif choice == 2:
             delete_employee()
-        elif choice == "3":
+        elif choice == 3:
             update_employee()
-        elif choice == "4":
+        elif choice == 4:
             generate_reports()
-        elif choice == "5":
+        elif choice == 5:
             print("Exiting the program. Goodbye!")
             break
         else:
